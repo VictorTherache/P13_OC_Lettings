@@ -1,10 +1,5 @@
-setup:
-  config:
-    APP_NAME: heroku-dockerize-django
 build:
   docker:
     web: Dockerfile
-  config:
-    NODE_ENV: production
 run:
-  web: npm start
+  web: gunicorn oc_lettings_site.wsgi:application --bind 0.0.0.0:$PORT
