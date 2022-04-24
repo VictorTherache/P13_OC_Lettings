@@ -55,7 +55,7 @@ jobs:
           name: Build Docker Image
           command: |
             docker build -t ci-image:latest . 
-             
+
   # heroku-deploy:
   #   docker:
   #     - image: cimg/python:3.8
@@ -84,7 +84,7 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-      # - build-push-docker:
+      - build-push-docker
       #    filters:
       #      branches:
       #        only: master
