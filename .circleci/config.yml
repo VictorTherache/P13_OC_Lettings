@@ -41,6 +41,21 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command: pytest
+  build-push-docker:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Set up tag
+          command: echo "export TAG=0.1.$CIRCLE_SHA1" >> $BASH_ENV
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t ci-image:latest . 
+             
   # heroku-deploy:
   #   docker:
   #     - image: cimg/python:3.8
