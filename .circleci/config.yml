@@ -59,6 +59,8 @@ jobs:
         - run: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker build -t $CIRCLE_SHA1 .
+            docker tag $CIRCLE_SHA1 $DOCKER_USERNAME/P13_OC_Lettings:$CIRCLE_SHA1
+            docker push $DOCKER_USERNAME/P13_OC_Lettings:$CIRCLE_SHA1
 
   # heroku-deploy:
   #   docker:
