@@ -50,9 +50,8 @@ jobs:
       steps:
         - checkout
         - setup_remote_docker
-        - run: |
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker build -t $CIRCLE_SHA1 .
+      - run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 
   # heroku-deploy:
