@@ -58,7 +58,7 @@ jobs:
         - setup_remote_docker
         - run: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
+            docker build -t $CIRCLE_SHA1 .
 
   # heroku-deploy:
   #   docker:
