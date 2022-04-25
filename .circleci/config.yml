@@ -43,10 +43,16 @@ jobs:
           command: pytest
   build-push-docker:
       docker:
-        - image: cimg/python:3.8
-          auth:
-            username: "victordax"
-            password: $DOCKER_PASSWORD
+        - image: docker:20.10.14-git
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+            name: Build and push docker image
+            command: |
+              docker build -t victordax/python-oc-lettings-fr_web:$CIRCLE_SHA1 .
+              echo $DOCKER_PASSWORD | docker login --username victordax --password-stdin
+              docker push victordax/python-oc-lettings-fr_web:$CIRCLE_SHA1
       steps:
         - checkout
         - setup_remote_docker
