@@ -78,8 +78,8 @@ jobs:
             heroku config:set SECRET_KEY=$HEROKU_API_KEY --app $HEROKU_APP_NAME
             heroku config:set DJANGO_DEBUG=0 --app $HEROKU_APP_NAME
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker pull $DOCKER_USERNAME/$p13_oc_lettings:$CIRCLE_SHA1
-            docker tag $DOCKER_USERNAME/$p13_oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+            docker pull $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
+            docker tag $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
             heroku container:release --app=$HEROKU_APP_NAME web
   # heroku-deploy:
