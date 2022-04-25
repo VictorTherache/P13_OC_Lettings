@@ -1,21 +1,22 @@
-version: 2.1
+version: '2.1'
 orbs:
-  docker: circleci/docker@1.4.0
-
-workflows:
-  my-workflow:
-    jobs:
-      - machine-job:
-          context:
-            - build-env-vars
-            - docker-hub-creds
-
+  docker: circleci/docker@x.y.z
 jobs:
-  machine-job:
-    machine: true
+  build-and-push:
+    executor: docker/docker
     steps:
-      - docker/check:
-          docker-username: DOCKERHUB_LOGIN  # DOCKER_LOGIN is the default value, if it exists, it automatically would be used.
-          docker-password: DOCKERHUB_PASSWORD  # DOCKER_PASSWORD is the default value
-      - docker/pull:
-          images: 'circleci/node:latest'
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: my_repo/orb-test
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: my_repo/orb-test
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+workflows:
+  commit:
+    jobs:
+      - build-and-push
