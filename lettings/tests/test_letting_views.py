@@ -1,10 +1,10 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.urls import resolve, reverse
 from lettings.views import index, letting
 from lettings.models import Address, Letting
 
 
-class TestLettingsViewsandUrls(SimpleTestCase):
+class TestLettingsViewsandUrls(TestCase):
 
     def setUp(self):
         self.mocked_address = Address.objects.create(
