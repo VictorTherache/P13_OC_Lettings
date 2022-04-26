@@ -33,10 +33,10 @@ jobs:
           pkg-manager: pip
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
-      # - run:
-      #     name: Lint
-      #     # This assumes flake8 is installed via the install-package step above
-      #     command: flake8
+      - run:
+          name: Lint
+          # This assumes flake8 is installed via the install-package step above
+          command: flake8
       - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
@@ -44,15 +44,6 @@ jobs:
   build-push-docker:
       docker:
         - image: docker:20.10.14-git
-      # steps:
-      #   - checkout
-      #   - setup_remote_docker
-      #   - run:
-      #       name: Build and push docker image
-      #       command: |
-      #         docker build -t victordax/python-oc-lettings-fr_web:$CIRCLE_SHA1 .
-      #         echo $DOCKER_PASSWORD | docker login --username victordax --password-stdin
-      #         docker push slaffer75/python-oc-lettings-fr_web:$CIRCLE_SHA1
       steps:
         - checkout
         - setup_remote_docker
@@ -82,38 +73,16 @@ jobs:
             docker tag $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
             heroku container:release --app=$HEROKU_APP_NAME web
-  # heroku-deploy:
-  #   docker:
-  #     - image: cimg/python:3.8
-  #       auth:
-  #         username: $DOCKER_USERNAME
-  #         password: $DOCKER_PASSWORD
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker
-  #     - run: |
-  #         set -ex
-  #         sudo curl https://cli-assets.heroku.com/install.sh | sh
-  #         echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-  #         heroku config:set DJANGO_ALLOWED_HOSTS=$HEROKU_APP_NAME.herokuapp.com --app $HEROKU_APP_NAME
-  #         heroku config:set SECRET_KEY=$HEROKU_SECRET_KEY --app $HEROKU_APP_NAME
-  #         heroku config:set DJANGO_DEBUG=0 --app $HEROKU_APP_NAME
-  #         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-  #         docker pull $DOCKER_USERNAME/$DOCKER_REPOSITORY:$CIRCLE_SHA1
-  #         docker tag $DOCKER_USERNAME/$DOCKER_REPOSITORY:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
-  #         docker push registry.heroku.com/$HEROKU_APP_NAME/web
-  #         heroku container:release --app=$HEROKU_APP_NAME web
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
       - build-push-docker
-        # filters:
-        #   branches:
-        #     only: master
+        filters:
+          branches:
+            only: master
         # requires:
         #    - build-and-test
       - heroku-deploy:
