@@ -3,8 +3,8 @@ from django.urls import resolve, reverse
 from lettings.views import index, letting
 from lettings.models import Address, Letting
 
-class TestLettingsViewsandUrls(SimpleTestCase):
 
+class TestLettingsViewsandUrls(SimpleTestCase):
 
     def setUp(self):
         self.mocked_address = Address.objects.create(
@@ -19,6 +19,7 @@ class TestLettingsViewsandUrls(SimpleTestCase):
             title='Joshua Tree Green Haus /w Hot Tub',
             address_id=self.mocked_address.id
         )
+
     def test_index_url(self):
         url = reverse('lettings:index')
         self.assertEqual(resolve(url).func, index)
