@@ -87,3 +87,4 @@ workflows:
             - build-push-docker
         # requires:
         #   - build-push-docker
+        # test;
