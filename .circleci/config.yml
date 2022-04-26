@@ -80,9 +80,6 @@ workflows:
     jobs:
       - build-and-test
       - build-push-docker
-        filters:
-          branches:
-            only: master
         # requires:
         #    - build-and-test
       - heroku-deploy:
