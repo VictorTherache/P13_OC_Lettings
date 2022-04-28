@@ -5,7 +5,7 @@ from oc_lettings_site.views import index
 
 class TestOcLettingsViewsandUrls(TestCase):
     """
-    Django Test class for the oc-lettings views 
+    Django Test class for the oc-lettings views
     and urls
     """
 
