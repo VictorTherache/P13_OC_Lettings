@@ -66,6 +66,7 @@ jobs:
             sudo curl https://cli-assets.heroku.com/install.sh | sh
             heroku config:set DJANGO_ALLOWED_HOSTS=$HEROKU_APP_NAME.herokuapp.com --app $HEROKU_APP_NAME
             heroku config:set SECRET_KEY=$HEROKU_API_KEY --app $HEROKU_APP_NAME
+            heroku config:set DJANGO_DEBUG=0 --app $HEROKU_APP_NAME
             docker pull $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
             docker tag $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
             docker push registry.heroku.com/$HEROKU_APP_NAME/web
@@ -77,6 +78,11 @@ workflows:
     jobs:
       - build-and-test
       - build-push-docker
+        # requires:
+        #    - build-and-test
       - heroku-deploy:
           requires:
             - build-push-docker
+        # requires:
+        #   - build-push-docker
+        # test2
