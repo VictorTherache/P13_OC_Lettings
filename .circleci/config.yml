@@ -10,6 +10,7 @@ orbs:
   # so you dont have to copy and paste it everywhere.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
   python: circleci/python@1.2
+  heroku: circleci/heroku@1.0.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -42,36 +43,32 @@ jobs:
           # This assumes pytest is installed via the install-package step above
           command: pytest
   build-push-docker:
-      docker:
-        - image: docker:20.10.14-git
-      steps:
-        - checkout
-        - setup_remote_docker
-        - run: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker build -t $CIRCLE_SHA1 .
-            docker tag $CIRCLE_SHA1 $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
-            docker push $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
-  heroku-deploy:
-      docker:
-        - image: cimg/python:3.8
-          auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-      steps:
-        - checkout
-        - setup_remote_docker
-        - run: |
-            set -ex
-            sudo curl https://cli-assets.heroku.com/install.sh | sh
-            heroku config:set DJANGO_ALLOWED_HOSTS=$HEROKU_APP_NAME.herokuapp.com --app $HEROKU_APP_NAME
-            heroku config:set SECRET_KEY=$HEROKU_API_KEY --app $HEROKU_APP_NAME
-            heroku config:set DJANGO_DEBUG=0 --app $HEROKU_APP_NAME
-            docker pull $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
-            docker tag $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
-            docker push registry.heroku.com/$HEROKU_APP_NAME/web
-            heroku container:release --app=$HEROKU_APP_NAME web
+      executor: python/default
 
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+          command: |
+            docker build -t $CIRCLE_SHA1 .
+            docker images
+  heroku-deploy:
+      executor: heroku/default
+      steps:
+        - checkout
+        - run:
+            name: Storing previous commit
+            command: |
+              git rev-parse HEAD > ./commit.txt
+        - heroku/install
+        - setup_remote_docker:
+            version: 18.06.0-ce
+        - run:
+            name: Pushing to heroku registry
+            command: |
+              heroku container:login
+              heroku container:push web -a $HEROKU_APP_NAME
+              heroku container:release web -a $HEROKU_APP_NAME
 workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
