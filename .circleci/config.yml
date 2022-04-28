@@ -61,8 +61,7 @@ jobs:
             command: |
               git rev-parse HEAD > ./commit.txt
         - heroku/install
-        - setup_remote_docker:
-            version: 18.06.0-ce
+        - setup_remote_docker
         - run:
             name: Pushing to heroku registry
             command: |
