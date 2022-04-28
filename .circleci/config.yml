@@ -49,9 +49,9 @@ jobs:
         - checkout
         - setup_remote_docker
         - run:
-          command: |
-            docker build -t $CIRCLE_SHA1 .
-            docker images
+           command: |
+             docker build -t $CIRCLE_SHA1 .
+             docker images
   heroku-deploy:
       executor: heroku/default
       steps:
@@ -61,8 +61,7 @@ jobs:
             command: |
               git rev-parse HEAD > ./commit.txt
         - heroku/install
-        - setup_remote_docker:
-            version: 18.06.0-ce
+        - setup_remote_docker
         - run:
             name: Pushing to heroku registry
             command: |
