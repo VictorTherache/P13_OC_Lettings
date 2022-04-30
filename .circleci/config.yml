@@ -69,10 +69,10 @@ workflows:
     jobs:
       - build-and-test
       - build-deploy-docker:
-          filter:
+          filters:
             branches:
               only: master
-            requires:
+          requires:
             - build-and-test
       - deploy-heroku:
           requires:
