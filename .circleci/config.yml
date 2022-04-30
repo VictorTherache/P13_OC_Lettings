@@ -23,11 +23,6 @@ jobs:
     # Change the version below to your required version of python
     docker:
       - image: cimg/python:3.8
-    # Checkout the code as the first step. This is a dedicated CircleCI step.
-    # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
-    # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
       - python/install-packages:
@@ -42,7 +37,7 @@ jobs:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
           command: pytest
-  build-push-docker:
+  build-deploy-docker:
       executor: python/default
 
       steps:
@@ -52,7 +47,7 @@ jobs:
            command: |
              docker build -t $CIRCLE_SHA1 .
              docker images
-  heroku-deploy:
+  deploy-heroku:
       executor: heroku/default
       steps:
         - checkout
@@ -73,12 +68,13 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
-      - build-push-docker
-        # requires:
-        #    - build-and-test
-      - heroku-deploy:
+      - build-deploy-docker:
+        filter:
+          branches:
+            only: master
+        requires:
+           - build-and-test
+      - deploy-heroku:
           requires:
-            - build-push-docker
-        # requires:
-        #   - build-push-docker
-        # test2
+            - build-deploy-docker
+
