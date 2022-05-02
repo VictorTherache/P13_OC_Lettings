@@ -82,7 +82,7 @@ image Docker. Pour cela veuillez suivre les instructions ci-dessous:
 - Installer Docker (https://docs.docker.com/get-docker/)
 - Construire l'image et lancer l'application `docker build -t <nom_de_lapp> .`
 `docker run -d -p 8000:8000 <nom_de_lapp>`
-Puis connectez-vous et déploiyez sur Heroku avec Heroku CLI en utilisant ces commandes:
+Puis connectez-vous et déployez sur Heroku avec Heroku CLI en utilisant ces commandes:
 - heroku container:login
 - heroku container:push -a <nom_de_lapp_heroku>
 - heroku container:release -a <nom_de_lapp_heroku>
