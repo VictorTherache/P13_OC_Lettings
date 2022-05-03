@@ -75,3 +75,18 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 - Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
 - Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+
+### Déploiement
+Le déploiement de l'application se fera sur Heroku en utilisant une
+image Docker. Pour cela veuillez suivre les instructions ci-dessous:
+- Installer Docker (https://docs.docker.com/get-docker/)
+- Construire l'image et lancer l'application `docker build -t <nom_de_lapp> .`
+`docker run -d -p 8000:8000 <nom_de_lapp>`
+Puis connectez-vous et déployez sur Heroku avec Heroku CLI en utilisant ces commandes:
+- heroku container:login
+- heroku container:push -a <nom_de_lapp_heroku>
+- heroku container:release -a <nom_de_lapp_heroku>
+
+### Lancer l'application en local
+- Pour cela veuillez utiliser la commande: 
+`docker run -d -p 8000:8000 victordax/P13_OC_Lettings`
