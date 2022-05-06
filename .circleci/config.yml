@@ -23,7 +23,6 @@ jobs:
     # Change the version below to your required version of python
     docker:
       - image: cimg/python:3.8
-   
     steps:
       - checkout
       - python/install-packages:
@@ -44,14 +43,14 @@ jobs:
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
-      steps:
-        - checkout
-        - setup_remote_docker
-        - run:
-           command: |
-             docker build -t $CIRCLE_SHA1 .
-             docker tag $CIRCLE_SHA1 $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
-             docker push $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+         command: |
+           docker build -t $CIRCLE_SHA1 .
+           docker tag $CIRCLE_SHA1 $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
+           docker push $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
   deploy-heroku:
       executor: heroku/default
       steps:
