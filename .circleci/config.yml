@@ -48,6 +48,7 @@ jobs:
       - setup_remote_docker
       - run:
          command: |
+           docker login
            docker build -t $CIRCLE_SHA1 .
            docker tag $CIRCLE_SHA1 $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
            docker push $DOCKER_USERNAME/p13_oc_lettings:$CIRCLE_SHA1
