@@ -77,8 +77,8 @@ workflows:
             branches:
               only: 
                 - main
-          requires:
-            - build-and-test
+          # requires:
+          #   - build-and-test
       - deploy-heroku:
           requires:
             - build-deploy-docker
