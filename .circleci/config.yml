@@ -69,14 +69,14 @@ workflows:
   test_and_deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      # - build-and-test
+      - build-and-test
       - build-deploy-docker:
           filters:
             branches:
               only: 
                 - main
-          # requires:
-          #   - build-and-test
+          requires:
+            - build-and-test
       - deploy-heroku:
           requires:
             - build-deploy-docker
